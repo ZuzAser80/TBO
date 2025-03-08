@@ -14,6 +14,7 @@ namespace Assets.Scripts.Players {
         [SerializeField] private TextMeshProUGUI cellMagText;
         [Space]
         [SerializeField] private TextMeshProUGUI itemInfoText;
+        [SerializeField] private TextMeshProUGUI itemNameText;
         [SerializeField] private GameObject itemInfoPanel;
 
         public void Awake() {
@@ -21,9 +22,9 @@ namespace Assets.Scripts.Players {
         }
 
         public void UpdateCellInfo(Stats stats) {
-            cellAtkText.text = "ATK: " + stats.Attack.ToString();
-            cellDefText.text = "DEF: " + stats.Defence.ToString();
-            cellMagText.text = "MGC: " + stats.Magic.ToString();
+            cellAtkText.text = stats.Attack.ToString();
+            cellDefText.text = stats.Defence.ToString();
+            cellMagText.text = stats.Magic.ToString();
         }
 
         public void UpdatecellVisibility(bool val, bool can) {
@@ -32,6 +33,7 @@ namespace Assets.Scripts.Players {
         }
 
         public void UpdateItemInfoPanel(AbstractItem item) {
+            itemNameText.text = item.Name;
             itemInfoText.text = item.Description;
         }
 

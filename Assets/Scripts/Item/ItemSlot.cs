@@ -1,3 +1,4 @@
+using Assets.Scripts.Level;
 using Assets.Scripts.Players;
 using TMPro;
 using UnityEngine;
@@ -7,10 +8,14 @@ using UnityEngine.UI;
 namespace Assets.Scripts.Items {
     public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler {
         public AbstractItem item;
-        public int Count { get; private set; }
+        public int Count;
 
         [SerializeField] private Image itemIcon;
         [SerializeField] private TextMeshProUGUI countText;
+        
+        private void Awake() {
+            UpdateIcon();
+        }
 
         public void Increment() {
             Count += 1;
@@ -26,32 +31,40 @@ namespace Assets.Scripts.Items {
         private void ClearSlot() { 
             itemIcon.color = new Color(0, 0, 0, 0);
             itemIcon.sprite = null;
+            item = null;
             countText.gameObject.SetActive(false);
         }
 
-        private void UpdateIcon() {
+        public void UpdateIcon() {
             if (Count >= 1) {
                 itemIcon.sprite = item.Sprite; 
-                itemIcon.color = new Color(1, 1, 1, 1);
+                itemIcon.color = Color.white;
+                countText.text = Count.ToString();
+                countText.gameObject.SetActive(true);
             } else {
                 itemIcon.sprite = null; 
                 itemIcon.color = new Color(0, 0, 0, 0);
+                countText.gameObject.SetActive(false);
             }
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            item.OnUse?.Invoke();
+            item.OnUse?.Invoke(GridManager.Instance.gameObject.GetComponent<Player>());
             Decrement();
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            if (item == null) return;
             UpdateIcon();
             PlayerUIManager.Instance.ToggleItemInfoPanel(true);
             PlayerUIManager.Instance.UpdateItemInfoPanel(item);
         }
 
-        public void OnPointerExit(PointerEventData eventData) => PlayerUIManager.Instance.ToggleItemInfoPanel(false);
+        public void OnPointerExit(PointerEventData eventData) { 
+            if (item == null) return;
+            PlayerUIManager.Instance.ToggleItemInfoPanel(false); 
+        }
     }
 }

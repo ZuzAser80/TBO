@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 490ee0215b32a694191f81bf511e149c, type: 3}
   m_Name: StatsItem
   m_EditorClassIdentifier: 
-  Description: NIGGA NIGGA NIGGA NIGGA
+  Description: 'this shield is
+
+    the nigguz'
+  Name: SHIELD
   Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   stats:
     Attack: 5
     Defence: 10
     Magic: -20
+  targetedAtEnemy: 0

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Assets.Scripts.Items;
 using Assets.Scripts.Level;
 using Assets.Scripts.Players.Class;
 using Unity.Mathematics;
@@ -9,6 +10,7 @@ namespace Assets.Scripts.Players {
     public class Player : MonoBehaviour, IEntity {
         public Classes playerClass;
         public bool canUse = false;
+        public Inventory inventory;
         public Dictionary<Classes, IClass> AbilitiesDict = new Dictionary<Classes, IClass> {
             { Classes.WARRIOR, new WarriorClass() },
             { Classes.MAGE, new MageClass() },

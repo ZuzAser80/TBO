@@ -17,6 +17,9 @@ namespace Assets.Scripts.Level {
         public UnityEvent onDoneClick;
         public bool isProtected = false;
         public bool isAvailable = true;
+        [SerializeField] private Image cellIcon;
+        [SerializeField] private Sprite TIC;
+        [SerializeField] private Sprite TAC;
         private bool canTake => ((IEntity)GridManager.Instance.GetComponent<Player>()).CurrentStats.MoreThen(StatsToTake) > 1;
 
         private void Awake() {
@@ -44,16 +47,18 @@ namespace Assets.Scripts.Level {
             Color color = Color.gray;
                 switch (currentState) {
                     case CellState.NONE:
-                        color = Color.white;
+                        color = new Color(0, 0, 0, 0);
                         break;
                     case CellState.TIC:
-                        color = Color.black;
+                        cellIcon.sprite = TIC;
+                        color = Color.white;
                         break;
                     case CellState.TAC:
-                        color = Color.green;
+                        cellIcon.sprite = TAC;
+                        color = Color.white;
                         break;
                 }
-            GetComponent<Image>().color = isProtected ? Color.blue : color; 
+            cellIcon.color = isProtected ? Color.blue : color; 
         }
 
         public void OnPointerEnter(PointerEventData eventData) {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using Assets.Scripts.Players;
 using Unity.Mathematics;
@@ -9,7 +10,6 @@ using UnityEngine.Events;
 namespace Assets.Scripts.Level {
     public class GridManager : MonoBehaviour
     {
-        
         public static GridManager Instance { get; private set; }
         public List<GridCell> cells = new List<GridCell>();
         public List<GridCell> canBeBlocked = new List<GridCell>();
@@ -18,13 +18,17 @@ namespace Assets.Scripts.Level {
 
         private List<GridCell> temp = new List<GridCell>();
         private bool canChangeMove = true;
-        private GridCell _cell;
+        private List<GridCell> _cells = new List<GridCell>();
+        private LevelClass levelClass;
+        private bool hasMoved = false;
 
         private void Awake() { 
             Instance = this;
+            levelClass = GetComponent<LevelClass>();
             cells = GetComponentsInChildren<GridCell>().ToList(); 
             cells.ForEach(x => x.StatsToTake.GenerateRandom(1, 30));
             addDefListeners();
+            currentMove = CellState.TIC;
         }
 
         private void addDefListeners() => cells.ForEach(x => x.onDoneClick.AddListener(FinishMove));
@@ -38,21 +42,35 @@ namespace Assets.Scripts.Level {
                 (temp.Any(y => x.GridPos - Vector3.down - Vector3.left == y.GridPos) && temp.Any(y => x.GridPos - Vector3.up - Vector3.right == y.GridPos))
             );
             if (win) {
+                cells.ForEach(x => x.UpdateColor());
                 Debug.Log(state + " won!");
+                if (state == CellState.TIC) { levelClass.Win(); }
+                else { levelClass.Lose(); }
             }
         }
 
-        private void changeMove() { currentMove = currentMove == CellState.TIC ? CellState.TAC : CellState.TIC; aiTurn(); }
-        private List<GridCell> getNeighbors(GridCell cell) { 
+        public void SetClass(int _class) => GetComponent<Player>().playerClass = (Classes)_class;
+
+        private void changeMove() {
+            currentMove = currentMove == CellState.TIC ? CellState.TAC : CellState.TIC; 
+            aiTurn(); 
+        }
+        private List<GridCell> getNeighbors(GridCell cell, CellState state) { 
             if (cell == null) return new List<GridCell>() {};
-            return cells.FindAll(x => (x.GridPos - cell.GridPos).magnitude <= Math.Sqrt(2) && x.currentState == CellState.NONE); 
+            return cells.FindAll(x => (x.GridPos - cell.GridPos).magnitude <= Math.Sqrt(2) && x.currentState == state); 
         }
 
         private void aiTurn() {
-            _cell = cells.FindAll(x => x.currentState == CellState.TIC).ElementAtOrDefault(
-                    UnityEngine.Random.Range(0, cells.Where(x => x.currentState == CellState.TIC).Count() - 1));
-            if (currentMove != CellState.TAC || _cell == null || getNeighbors(_cell).Count() == 0) return;
-            getNeighbors(_cell)[UnityEngine.Random.Range(0, getNeighbors(_cell).Count())].currentState = CellState.TAC;
+            if(hasMoved) return;
+            //FindAll на FindAll'е и FindAll-ом погоняет
+            cells.FindAll(x => x.currentState == CellState.TIC && !x.isProtected).ForEach(x => 
+            cells.FindAll(y => (y.GridPos == x.GridPos + x.GridPos - getNeighbors(x, CellState.TIC)[0].GridPos 
+            || y.GridPos == x.GridPos - getNeighbors(x, CellState.TIC)[0].GridPos) && y.currentState == CellState.NONE).ForEach(y => _cells.Add(y)));
+            if (currentMove != CellState.TAC || _cells.Count() == 0 || hasMoved) { return; }
+            _cells = _cells.Where(x => x.currentState == CellState.NONE).ToList();
+            if (_cells.Count == 0) { _cells.FindLast(x => x.currentState == CellState.NONE).currentState = CellState.TAC; FinishMove(); }
+            var r = _cells[UnityEngine.Random.Range(0, _cells.Count())];            
+            r.currentState = CellState.TAC;
             FinishMove();
         }
 
@@ -63,6 +81,16 @@ namespace Assets.Scripts.Level {
             addDefListeners();
         }
 
+        public void ResetAll(bool resetScore) {
+            levelClass.CurrentScore = resetScore ? 0 : levelClass.CurrentScore;
+            cells.ForEach(x => { x.isAvailable = true; x.isProtected = false; x.currentState = CellState.NONE; x.UpdateColor(); });
+            currentMove = CellState.TIC;
+            Time.timeScale = 1;
+            GetComponent<Player>().hasUsed = false;
+            cells.ForEach(x => x.StatsToTake.GenerateRandom(1, 30 + levelClass.CurrentScore * 5));
+            ClearAll();
+        }
+
         public void Explode(GridCell cell) {
             cells.FindAll(x => x.currentState == CellState.NONE).FindAll(y => (y.GridPos - cell.GridPos).magnitude <= 1).ForEach(z => z.TrySetState(currentMove));
             cell.currentState = CellState.NONE;
@@ -70,6 +98,7 @@ namespace Assets.Scripts.Level {
         }
 
         public void FinishMove() { 
+            if (Time.timeScale == 0) { return; }
             updateCell(CellState.TIC);
             updateCell(CellState.TAC);
             cells.ForEach(x => x.UpdateColor());

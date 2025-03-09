@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Assets.Scripts.Items;
 using Assets.Scripts.Level;
@@ -10,6 +11,7 @@ namespace Assets.Scripts.Players {
     public class Player : MonoBehaviour, IEntity {
         public Classes playerClass;
         public bool canUse = false;
+        public bool hasUsed = false;
         public Inventory inventory;
         public Dictionary<Classes, IClass> AbilitiesDict = new Dictionary<Classes, IClass> {
             { Classes.WARRIOR, new WarriorClass() },
@@ -19,22 +21,45 @@ namespace Assets.Scripts.Players {
         };
         [SerializeField] private Stats stats;
 
-        int IEntity.LevelExp { get; set; }
-        int IEntity.CurrentExp { get; set; }
         Stats IEntity.CurrentStats { get => stats; set => stats = value; }
-        UnityEvent IEntity.onLevelUp { get; set; }
+
+
+        private void Start() { 
+            PlayerUIManager.Instance.UpdatePlayerStats(stats); 
+        }
+
+        public void UpdateClassText() {
+            string s = "";
+            switch (playerClass) {
+                case Classes.WARRIOR:
+                    s = "ВОИН";
+                    break;
+                case Classes.MAGE:
+                    s = "МАГ";
+                    break;
+                case Classes.ROGUE:
+                    s = "ПЛУТ";
+                    break;
+                case Classes.PALADIN:
+                    s = "ПАЛАДИН";
+                    break;
+            }
+            PlayerUIManager.Instance.SetAbilityText(s); 
+        }
 
         public void ApplyStats(Stats stats) {
             this.stats.Attack += stats.Attack;
             this.stats.Defence += stats.Defence;
             this.stats.Magic += stats.Magic;
+            PlayerUIManager.Instance.UpdatePlayerStats(this.stats);
         }
 
         private void Update() {
-            if(Input.GetKeyDown(KeyCode.Q)) AbilitiesDict[playerClass].OnUse();
+            if(Input.GetKeyDown(KeyCode.Q) && !hasUsed) { AbilitiesDict[playerClass].OnUse(); hasUsed = true; }
         }
 
     }
+    [Serializable]
     public enum Classes { 
         WARRIOR, //2 marks on 1 move #GridManager done
         MAGE, //bomb #GridManager done
@@ -42,7 +67,7 @@ namespace Assets.Scripts.Players {
         PALADIN //Protect 1 cell for entire game #GridManager done
     }
 
-    [System.Serializable]
+    [Serializable]
     public class Stats {
         public int Attack = 0;
         public int Defence = 0;
@@ -50,7 +75,6 @@ namespace Assets.Scripts.Players {
 
         public int MoreThen(Stats stats) => (Attack > stats.Attack ? 1 : 0) + (Defence > stats.Defence ? 1 : 0) + (Magic > stats.Magic ? 1 : 0); 
 
-        //placeholder, fix later
         public void GenerateRandom(int min, int max) {
             Attack = UnityEngine.Random.Range(min, max);
             Defence = UnityEngine.Random.Range(min, max);

@@ -50,7 +50,7 @@ namespace Assets.Scripts.Items {
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            item.OnUse?.Invoke(GridManager.Instance.gameObject.GetComponent<Player>());
+            item.OnUse?.Invoke(item.targetedAtEnemy ? GridManager.Instance.gameObject.GetComponent<Player>() : GridManager.Instance.gameObject.GetComponent<Player>());
             Decrement();
         }
 

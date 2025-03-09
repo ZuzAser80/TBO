@@ -9,6 +9,5 @@ namespace Assets.Scripts.Items {
     {
         public override Action<IEntity> OnUse { get => delegate(IEntity entity) { entity.ApplyStats(stats); }; set => OnUse = value; }
         public Stats stats;
-        public bool targetedAtEnemy;
     }
 }

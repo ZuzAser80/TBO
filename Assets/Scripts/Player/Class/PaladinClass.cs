@@ -6,7 +6,7 @@ namespace Assets.Scripts.Players.Class {
         void IClass.OnUse()
         {
             GridManager.Instance.cells.ForEach(x => x.setAvailable(false));
-            GridManager.Instance.cells.FindAll(x => x.currentState != GridManager.Instance.currentMove && x.currentState != CellState.NONE).ForEach(x => {
+            GridManager.Instance.cells.FindAll(x => x.currentState == GridManager.Instance.currentMove).ForEach(x => {
                 x.setAvailable(true);
                 x.onDoneClick.AddListener( delegate { x.Protect(); x.UpdateColor(); GridManager.Instance.ClearAll(); });
             });

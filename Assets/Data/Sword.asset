@@ -10,15 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 490ee0215b32a694191f81bf511e149c, type: 3}
-  m_Name: StatsItem
+  m_Name: Sword
   m_EditorClassIdentifier: 
-  Description: 'this shield is
-
-    the nigguz'
-  Name: SHIELD
-  Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  stats:
-    Attack: 5
-    Defence: 10
-    Magic: -20
+  Description: "\u042D\u0442\u043E\u0442 \u043C\u0435\u0447 \u0443\u043B\u0443\u0447\u0448\u0430\u0435\u0442
+    \u0432\u0430\u0448\u0443 \u0430\u0442\u0430\u043A\u0443(+15)"
+  Name: "\u041C\u0415\u0427"
+  Sprite: {fileID: 21300000, guid: 4a75a9b8d47739949a71ff356ea627ae, type: 3}
   targetedAtEnemy: 0
+  stats:
+    Attack: 15
+    Defence: 0
+    Magic: 0

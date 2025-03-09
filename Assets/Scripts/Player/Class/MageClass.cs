@@ -6,7 +6,7 @@ namespace Assets.Scripts.Players.Class {
         void IClass.OnUse()
         {
             GridManager.Instance.cells.FindAll(x => x.currentState == CellState.NONE)
-            .ForEach(x => x.onDoneClick.AddListener( delegate { GridManager.Instance.Explode(x); GridManager.Instance.ClearAll(); GridManager.Instance.FinishMove(); }));
+            .ForEach(x => x.onDoneClick.AddListener( delegate { GridManager.Instance.Explode(x); GridManager.Instance.ClearAll(); }));
             GridManager.Instance.FinishMove();
         }
     }

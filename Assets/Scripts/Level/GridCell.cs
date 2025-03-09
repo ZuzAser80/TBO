@@ -18,9 +18,10 @@ namespace Assets.Scripts.Level {
         public bool isProtected = false;
         public bool isAvailable = true;
         [SerializeField] private Image cellIcon;
+        [SerializeField] private Image shieldIcon;
         [SerializeField] private Sprite TIC;
         [SerializeField] private Sprite TAC;
-        private bool canTake => ((IEntity)GridManager.Instance.GetComponent<Player>()).CurrentStats.MoreThen(StatsToTake) > 1;
+        public bool canTake => ((IEntity)GridManager.Instance.GetComponent<Player>()).CurrentStats.MoreThen(StatsToTake) > 1;
 
         private void Awake() {
             currentState = CellState.NONE;
@@ -33,7 +34,7 @@ namespace Assets.Scripts.Level {
             return true;
         }
 
-        public void Protect() { isProtected = true; }
+        public void Protect() { Debug.Log(1); isProtected = true; shieldIcon.gameObject.SetActive(true); }
         public void setAvailable(bool value) => isAvailable = value;
 
         public void OnClick() { 
@@ -58,7 +59,7 @@ namespace Assets.Scripts.Level {
                         color = Color.white;
                         break;
                 }
-            cellIcon.color = isProtected ? Color.blue : color; 
+            cellIcon.color = color; 
         }
 
         public void OnPointerEnter(PointerEventData eventData) {

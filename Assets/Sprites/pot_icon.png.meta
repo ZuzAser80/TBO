@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4a75a9b8d47739949a71ff356ea627ae
+guid: 23b4d6f3ca0092245bd2ea2ecc42e82c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1266472453293385870
-    second: atk_icon_0
+      213: 5621359638612714585
+    second: pot_icon_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 3
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: atk_icon_0
+      name: pot_icon_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 25
-        height: 25
+        width: 10
+        height: 10
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 27751a783069c6ee0800000000000000
-      internalID: -1266472453293385870
+      spriteID: 954aa3edec4130e40800000000000000
+      internalID: 5621359638612714585
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      atk_icon_0: -1266472453293385870
+      pot_icon_0: 5621359638612714585
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

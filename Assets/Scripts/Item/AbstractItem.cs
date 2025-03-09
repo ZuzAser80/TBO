@@ -12,6 +12,7 @@ namespace Assets.Scripts.Items {
         public string Description;
         public string Name;
         public Sprite Sprite;
+        public bool targetedAtEnemy;
     }
 }
 

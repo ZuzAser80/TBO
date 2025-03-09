@@ -16,6 +16,18 @@ namespace Assets.Scripts.Players {
         [SerializeField] private TextMeshProUGUI itemInfoText;
         [SerializeField] private TextMeshProUGUI itemNameText;
         [SerializeField] private GameObject itemInfoPanel;
+        [Space]
+        [SerializeField] private TextMeshProUGUI atkText;
+        [SerializeField] private TextMeshProUGUI defText;
+        [SerializeField] private TextMeshProUGUI mgcText;
+        [Space]
+        [SerializeField] private TextMeshProUGUI abilityText;
+        [Space]
+        [SerializeField] private GameObject winScreen;
+        [SerializeField] private GameObject loseScreen;
+        [Space]
+        [SerializeField] private TextMeshProUGUI highScoreText;
+        [SerializeField] private TextMeshProUGUI currentScoreText;
 
         public void Awake() {
             Instance = this;
@@ -32,11 +44,21 @@ namespace Assets.Scripts.Players {
             CellInfoPanel.GetComponent<Image>().color = can ? Color.green : Color.red;
         }
 
+        public void UpdatePlayerStats(Stats stats) {
+            atkText.text = stats.Attack.ToString();
+            defText.text = stats.Defence.ToString();
+            mgcText.text = stats.Magic.ToString();
+        }
+
         public void UpdateItemInfoPanel(AbstractItem item) {
             itemNameText.text = item.Name;
             itemInfoText.text = item.Description;
         }
-
+        public void SetNewScore(int score) => currentScoreText.text = score.ToString();
+        public void SetNewHighScore(int score) => highScoreText.text = score.ToString();
+        public void Win() => winScreen.SetActive(true);
+        public void Lose() => loseScreen.SetActive(true);
+        public void SetAbilityText(string abl) => abilityText.text = "КЛАСС: " + abl;
         public void ToggleItemInfoPanel(bool val) => itemInfoPanel.SetActive(val);
 
     }
